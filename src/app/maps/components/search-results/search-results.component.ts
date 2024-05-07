@@ -25,4 +25,14 @@ export class SearchResultsComponent {
 		const latitude = place.properties.coordinates.latitude;
 		this.mapService.flyTo([longitude, latitude]);
 	}
+
+	getDirections(place: Feature) {
+		if (!this.placesService.useLocation) throw Error('No hay userLocation');
+
+		const start = this.placesService.useLocation;
+		const longitude = place.properties.coordinates.longitude;
+		const latitude = place.properties.coordinates.latitude;
+
+		this.mapService.getRouteBetweenPoints(start, [longitude, latitude]);
+	}
 }
