@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LngLatBounds, LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
+import { AnySourceData, LngLatBounds, LngLatLike, Map, Marker, Popup } from 'mapbox-gl';
 import { Feature } from '../interfaces/places';
 import { DirectionsApiClient } from '../api';
 import { DirectionsResponse, Route } from '../interfaces/directions';
@@ -66,7 +66,7 @@ export class MapService {
 	}
 
 	private drawPolyline(route: Route) {
-		// console.log({ kms: route.distance / 1000, duration: route.duration / 60 });
+		console.log({ kms: route.distance / 1000, duration: route.duration / 60 });
 
 		if (!this.map) throw Error('Mapa no inicializado');
 		const coords = route.geometry.coordinates;
@@ -77,6 +77,41 @@ export class MapService {
 		});
 		this.map?.fitBounds(bounds, {
 			padding: 200,
+		});
+
+		const sourceData: AnySourceData = {
+			type: 'geojson',
+			data: {
+				type: 'Feature',
+				properties: {},
+				geometry: {
+					type: 'LineString',
+					coordinates: coords,
+				},
+			},
+		};
+
+		// TODO: limpiar ruta previa
+
+		if (this.map.getLayer('RoutesString')) {
+			this.map.removeLayer('RoutesString');
+			this.map.removeSource('RoutesString');
+		}
+
+		this.map.addSource('RoutesString', sourceData);
+
+		this.map.addLayer({
+			id: 'RoutesString',
+			type: 'line',
+			source: 'RoutesString',
+			layout: {
+				'line-cap': 'round',
+				'line-join': 'round',
+			},
+			paint: {
+				'line-color': 'black',
+				'line-width': 3,
+			},
 		});
 	}
 }
