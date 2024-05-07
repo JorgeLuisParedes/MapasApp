@@ -29,6 +29,8 @@ export class SearchResultsComponent {
 	getDirections(place: Feature) {
 		if (!this.placesService.useLocation) throw Error('No hay userLocation');
 
+		this.placesService.delatePlaces();
+
 		const start = this.placesService.useLocation;
 		const longitude = place.properties.coordinates.longitude;
 		const latitude = place.properties.coordinates.latitude;

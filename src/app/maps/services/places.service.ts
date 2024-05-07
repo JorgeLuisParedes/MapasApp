@@ -58,4 +58,8 @@ export class PlacesService {
 				this.mapService.createMarkersFromPlaces(this.places, this.useLocation);
 			});
 	}
+
+	delatePlaces() {
+		this.places = [];
+	}
 }
