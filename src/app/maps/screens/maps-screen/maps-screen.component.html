@@ -1,1 +1,4 @@
-<p>maps-screen works!</p>
+<app-loading *ngIf="!isUserLocationReady; else mapReady"></app-loading>
+<ng-template #mapReady>
+	<app-maps-view />
+</ng-template>
